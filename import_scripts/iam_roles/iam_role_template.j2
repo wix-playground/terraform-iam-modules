@@ -1,0 +1,41 @@
+module role_{{ safe_name }} {
+    source = {{ module_source | tojson }}
+
+    name = {{ iam_role.name | tojson }}
+    path = {{ iam_role.path | tojson }}{% if iam_role.description %}
+    description = {{ iam_role.description | tojson }}{% endif %}
+    {%- if iam_role.permissions_boundary %}
+    permissions_boundary = {{ iam_role.permissions_boundary["PermissionsBoundaryArn"] | tojson }}
+    {%- endif %}
+    assume_role_principals = {{ assume_role_principals }}
+    {%- if session_duration_hours != 1 %}
+    session_duration_hours = {{ session_duration_hours }}
+    {%- endif -%}
+    {% if inline_policies | length > 0 %}
+    inline_policy_name = {{ inline_policies[0].name | tojson }}
+    inline_policy_heredoc_string = "{{ inline_policies[0].policy_document | tojson | replace('\"', '\\\"') }}"
+    {% endif %}
+    attached_policy_arns = {{ attached_policy_arns | tojson }}{% if instance_profile %}
+
+    create_instance_profile = true
+    instance_profile_name = {{ instance_profile.name | tojson }}
+    instance_profile_path = {{ instance_profile.path | tojson }}{% endif %}
+    {%- if iam_role.tags %}
+
+    tags = {
+    {%- for tag in iam_role.tags %}
+        {{ tag["Key"] | tojson }} = {{ tag["Value"] | tojson -}}
+    {% endfor %}
+    }
+    {%- endif %}
+}
+{% if inline_policies | length > 1 %}{% for inline_policy in inline_policies[1:] %}
+module role_{{ safe_name }}_{{ inline_policy.name }} {
+    source = {{ module_source | tojson }}
+
+    create_iam_role = false
+    name = module.role_{{ safe_name }}.name
+    inline_policy_name = {{ inline_policy.name | tojson }}
+    inline_policy_heredoc_string = "{{ inline_policy.policy_document | tojson | replace('\"', '\\\"') }}"
+}
+{% endfor %}{% endif %}

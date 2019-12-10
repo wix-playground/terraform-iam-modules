@@ -1,0 +1,22 @@
+module group_{{ safe_name }} {
+    source = {{ module_source | tojson }}
+
+    name = {{ iam_group.name | tojson }}
+    path = {{ iam_group.path | tojson }}
+    attached_policy_arns = {{ attached_policy_arns | tojson }}
+    {%- if inline_policies | length > 0 %}
+
+    inline_policy_name = {{ inline_policies[0].name | tojson }}
+    inline_policy_heredoc_string = "{{ inline_policies[0].policy_document | tojson | replace('\"', '\\\"') }}"
+    {%- endif %}
+}
+{% if inline_policies | length > 1 %}{% for inline_policy in inline_policies[1:] %}
+module group_{{ safe_name }}_{{ inline_policy.name }} {
+    source = {{ module_source | tojson }}
+
+    create_iam_group = false
+    name = module.group_{{ safe_name }}.name
+    inline_policy_name = {{ inline_policy.name | tojson }}
+    inline_policy_heredoc_string = "{{ inline_policy.policy_document | tojson | replace('\"', '\\\"') }}"
+}
+{% endfor %}{% endif %}

@@ -1,0 +1,35 @@
+module user_{{ safe_name }} {
+    source = {{ module_source | tojson }}
+
+    name = {{ iam_user.name | tojson }}
+    path = {{ iam_user.path | tojson }}
+    attached_policy_arns = {{attached_policy_arns | tojson}}
+    {%- if iam_user.permissions_boundary %}
+    permissions_boundary = {{ iam_user.permissions_boundary | tojson }}
+    {%- endif %}
+    {%- if force_destroy %}
+    force_destroy = {{ force_destroy | tojson }}
+    {%- endif %}
+    {%- if group_names %}
+    group_names = {{ group_names | tojson }}
+    {%- endif %}
+    {%- if iam_user.tags %}
+
+    tags = {
+    {%- for tag in iam_user.tags %}
+        {{ tag["Key"] | tojson }} = {{ tag["Value"] | tojson -}}
+    {% endfor %}
+    }
+    {%- endif %}
+}
+{% for inline_policy in inline_policy_list %}
+module user_{{ safe_user_name }}_{{ inline_policy.name }} {
+    source = "./modules/aws_iam_user"
+
+    create_iam_user = false
+    name = module.user_{{ iam_user.name }}.name
+
+    inline_policy_name = {{ inline_policy.name | tojson }}
+    inline_policy_heredoc_string = "{{ inline_policy.policy_document | tojson | replace('\"', '\\\"') }}"
+}
+{% endfor %}
