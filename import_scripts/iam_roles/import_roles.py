@@ -49,6 +49,8 @@ def generate_terraform_code(iam_role, module_source, template):
     )
 
 def generate_import_statement(iam_role, import_path):
+    safe_name = iam_role.name.replace("@", "-").replace(".", "-")
+
     result = [
         "terraform import '{}{}' {}".format(
             f"{import_path}." if import_path else "",
@@ -67,16 +69,27 @@ def generate_import_statement(iam_role, import_path):
         count = count + 1
 
 
-    for inline_policy in iam_role.policies.all():
-        result.append("terraform import {}{} {}".format(
+    inline_policies = list(iam_role.policies.all())
+    if inline_policies and len(inline_policies) > 0:
+        result.append("terraform import '{}{}' {}".format(
             f"{import_path}." if import_path else "",
-            ".".join([f"role_{iam_role.name}_{inline_policy.name}", "aws_iam_role_policy", "this"]),
-            f"{iam_role.name}:{inline_policy.name}"
+            ".".join([f"role_{safe_name}", "aws_iam_role_policy", "this[0]"]),
+            f"{iam_role.name}:{inline_policies[0].name}"
         ))
+
+    if inline_policies and len(inline_policies) > 1:
+        count = 0
+        for inline_policy in inline_policies[1:]:
+            result.append("terraform import '{}{}' {}".format(
+                f"{import_path}." if import_path else "",
+                ".".join([f"role_{safe_name}_{inline_policy.name}", "aws_iam_role_policy", f"this[{count}]"]),
+                f"{iam_role.name}:{inline_policy.name}"
+            ))
+        count += 1
 
     try:
         instance_profile = list(iam_role.instance_profiles.all())[0]
-        result.append("terraform import {}{} {}".format(
+        result.append("terraform import '{}{}' {}".format(
             f"{import_path}." if import_path else "",
             ".".join([f"role_{iam_role.name}", "aws_iam_instance_profile", "this[0]"]),
             f"{instance_profile.name}"
@@ -92,7 +105,7 @@ if __name__ == "__main__":
         help="name of the role you would like to import into terraform. Imports all IAM roles by default.")
     parser.add_argument("-m", "--module-source",
         help="indicates where terraform should look for IAM policy module source code",
-        default="./modules/aws_iam_role")
+        default="github.com/vladyslav-tripatkhi/terraform-iam-modules/modules/aws_iam_role")
     parser.add_argument("-i", "--import-path",
         help="terraform state path to import IAM polcies to. Defaults to state's root which is empty",
         default="")

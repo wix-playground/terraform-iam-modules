@@ -1,20 +1,32 @@
 output id {
-  value       = data.aws_iam_role.this.id
+  value = concat(
+    aws_iam_role.this.*.id,
+    [""]
+  )[0]
   description = "Id of the newly-created IAM role."
 }
 
 output unique_id {
-  value       = data.aws_iam_role.this.unique_id
+  value = concat(
+    aws_iam_role.this.*.unique_id,
+    [""]
+  )[0]
   description = "Unique id of the newly-created IAM role."
 }
 
 output arn {
-  value       = data.aws_iam_role.this.arn
+  value = concat(
+    aws_iam_role.this.*.arn,
+    [""]
+  )[0]
   description = "ARN of the newly-created IAM role."
 }
 
 output name {
-  value       = data.aws_iam_role.this.name
+  value = concat(
+    aws_iam_role.this.*.name,
+    [""]
+  )[0]
   description = "Name of the newly-created IAM role."
 }
 

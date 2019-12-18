@@ -8,6 +8,13 @@
 * Add proper README.md and examples.
 * Unify import scripts so that only one/a couple of python files will remain. Add import commands to Makefile.
 
+## v0.2.1 2019-12-18
+* Removed aws_iam_group data source as it was being recreadted every terraform run, which led to constant resource re-creation.
+* Changed outputs to reflect these changes.
+* Fixed iam_role imports:
+    * Encased instance profile import statement in single quotes;
+    * Fixed syntax of inline policy import statements;
+
 ## v0.2.0 2019-12-10
 * Added iam_user, iam_group and iam_role modules to this repo. Renamed it to `terraform-iam-modules`.
 * Added a dummy readme into each module folder and the repo itself.

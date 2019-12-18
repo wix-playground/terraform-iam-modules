@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import boto3
 import jinja2
 import argparse
@@ -31,7 +32,7 @@ if __name__ == "__main__":
         help="name of the group you would like to import into terraform. Imports all IAM groups by default.")
     parser.add_argument("-m", "--module-source",
         help="indicates where terraform should look for IAM policy module source code",
-        default="./modules/aws_iam_policy")
+        default="github.com/vladyslav-tripatkhi/terraform-iam-modules/modules/aws_iam_policy")
     parser.add_argument("-i", "--import-path",
         help="terraform state path to import IAM polcies to. Defaults to state's root which is empty",
         default="")

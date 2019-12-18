@@ -36,11 +36,6 @@ resource aws_iam_role this {
   tags = var.tags
 }
 
-data aws_iam_role this {
-  name       = var.create_iam_role ? aws_iam_role.this[0].name : var.name
-  depends_on = [aws_iam_role.this]
-}
-
 module inline_policy {
   source = "../aws_iam_policy"
 
