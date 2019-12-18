@@ -8,9 +8,16 @@
 * Add proper README.md and examples.
 * Unify import scripts so that only one/a couple of python files will remain. Add import commands to Makefile.
 
+## v0.2.2 2019-12-18
+* Removed aws_iam_user data source as it was being recreadted every terraform run, which led to constant resource re-creation.
+* Changed outputs to reflect these changes.
+* Fixed iam_user import template to properly utilize user's safe_name. 
+* Removed an unnecessary requirements.txt from aws_iam_user import script.
+
 ## v0.2.1 2019-12-18
 * Removed aws_iam_group data source as it was being recreadted every terraform run, which led to constant resource re-creation.
 * Changed outputs to reflect these changes.
+* Added scripts to makefile that create and destroy python virtualenv.
 * Fixed iam_role imports:
     * Encased instance profile import statement in single quotes;
     * Fixed syntax of inline policy import statements;

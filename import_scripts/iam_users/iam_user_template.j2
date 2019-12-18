@@ -23,7 +23,7 @@ module user_{{ safe_name }} {
     {%- endif %}
 }
 {% for inline_policy in inline_policy_list %}
-module user_{{ safe_user_name }}_{{ inline_policy.name }} {
+module user_{{ safe_name }}_{{ inline_policy.name }} {
     source = "./modules/aws_iam_user"
 
     create_iam_user = false
