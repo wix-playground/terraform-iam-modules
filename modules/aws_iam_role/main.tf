@@ -53,15 +53,19 @@ resource aws_iam_role_policy this {
   name        = var.inline_policy_name
   name_prefix = var.inline_policy_name_prefix
 
-  role   = data.aws_iam_role.this.id
+  role   = var.name
   policy = module.inline_policy.json
+
+  depends_on = [aws_iam_role.this]
 }
 
 resource aws_iam_role_policy_attachment this {
   count = length(var.attached_policy_arns)
 
-  role       = data.aws_iam_role.this.name
+  role       = var.name
   policy_arn = var.attached_policy_arns[count.index]
+
+  depends_on = [aws_iam_role.this]
 }
 
 resource aws_iam_instance_profile this {
@@ -71,6 +75,7 @@ resource aws_iam_instance_profile this {
   name_prefix = var.instance_profile_name_prefix
 
   path = var.instance_profile_path
+  role = var.name
 
-  role = data.aws_iam_role.this.name
+  depends_on = [aws_iam_role.this]
 }
