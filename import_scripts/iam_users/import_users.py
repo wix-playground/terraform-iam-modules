@@ -95,17 +95,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if args.generate_code_only and args.import_string_only:
-        print("Daym, son")
+        print("You have provided both --import-string-only and --generate-code-only. The programm will now exit")
         exit(1)
 
     if not args.generate_code_only and not args.import_string_only:
         args.generate_code_only=True
         args.import_string_only=True
     
-    session = boto3.Session(
-        profile_name="default",
-        region_name="us-east-1"
-    )
+    session = boto3.Session()
 
     if args.user_name:
         print("Exporting only {}".format(args.user_name))

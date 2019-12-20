@@ -9,7 +9,6 @@ PRINCIPAL_TYPES = ["AWS", "Service"]
 
 class TerraformPrincipal:
     def __init__(self, aws_principal):
-        self._name = "shit"
         self._statements = []
         for principal_type in PRINCIPAL_TYPES:
             if principal_type in aws_principal:
@@ -124,17 +123,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if args.generate_code_only and args.import_string_only:
-        print("Daym, son")
+        print("You have provided both --import-string-only and --generate-code-only. The programm will now exit")
         exit(1)
 
     if not args.generate_code_only and not args.import_string_only:
         args.generate_code_only=True
         args.import_string_only=True
 
-    session = boto3.Session(
-        profile_name="default",
-        region_name="us-east-1"
-    )
+    session = boto3.Session()
 
     iam = session.resource("iam")
     import_statements = []

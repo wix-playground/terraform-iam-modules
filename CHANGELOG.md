@@ -8,6 +8,11 @@
 * Add proper README.md and examples.
 * Unify import scripts so that only one/a couple of python files will remain. Add import commands to Makefile.
 
+## v0.2.3 2019-12-20
+* Removed default configurations for boto3 session, so it can be set up more dynamically.
+* Added a proper error message, if specified both --import-string-only and --generate-code-only.
+* Removed a particularly nasty message.
+
 ## v0.2.2 2019-12-18
 * Removed aws_iam_user data source as it was being recreadted every terraform run, which led to constant resource re-creation.
 * Changed outputs to reflect these changes.
