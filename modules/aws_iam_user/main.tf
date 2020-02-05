@@ -87,6 +87,6 @@ resource aws_iam_user_group_membership this {
 
   user   = var.name
   groups = var.group_names
-  
+
   depends_on = [aws_iam_user.this]
 }

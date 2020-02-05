@@ -8,6 +8,11 @@
 * Add proper README.md and examples.
 * Unify import scripts so that only one/a couple of python files will remain. Add import commands to Makefile.
 
+## v0.2.4 2019-12-22
+* Changes to python_virtualenv_setup command in makefile:
+    * Added installation of latest virtualenv module;
+    * Set python binary that is used to create venv to the value of PYTHON_BIN variable.
+
 ## v0.2.3 2019-12-20
 * Removed default configurations for boto3 session, so it can be set up more dynamically.
 * Added a proper error message, if specified both --import-string-only and --generate-code-only.

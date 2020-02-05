@@ -1,0 +1,10 @@
+module policy_{{ safe_name }} {
+    source = {{ module_source | tojson }}
+
+    name = {{ iam_policy.policy_name | tojson }}
+    path = {{ iam_policy.path | tojson }}
+    {%- if iam_policy.description %}
+    description = {{ iam_policy.description | tojson }}
+    {%- endif %}
+    heredoc_string = "{{ policy_document | tojson | replace('"', '\\\"') }}"
+}

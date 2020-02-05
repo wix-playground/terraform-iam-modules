@@ -1,12 +1,14 @@
 .SILENT: format python_virtualenv_setup python_virtualenv_cleanup
 
 PYTHON_BIN=python3
+PIP_BIN=pip3
 
 format:
 	/usr/bin/env terraform fmt -list=true -recursive ./
 
 python_virtualenv_setup:
-	python -m virtualenv -p ${PYTHON_BIN} virtualenv; \
+	${PIP_BIN} install --upgrade virtualenv
+	${PYTHON_BIN} -m virtualenv -p ${PYTHON_BIN} virtualenv; \
 	source virtualenv/bin/activate; \
 	pip install -r import_scripts/requirements.txt; \
 	echo "Python virtualenv has been installed successfully."; \

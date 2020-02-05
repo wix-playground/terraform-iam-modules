@@ -1,15 +1,15 @@
 output name {
-  value = concat(aws_iam_user.this.*.name, [""])[0]
+  value       = concat(aws_iam_user.this.*.name, [""])[0]
   description = "Name of the newly-created IAM user. Returns empty string if create_iam_user is set to false."
 }
 
 output arn {
-  value = concat(aws_iam_user.this.*.arn, [""])[0]
+  value       = concat(aws_iam_user.this.*.arn, [""])[0]
   description = "ARN of the newly-created IAM user. Returns empty string if create_iam_user is set to false."
 }
 
 output unique_id {
-  value = concat(aws_iam_user.this.*.unique_id, [""])[0]
+  value       = concat(aws_iam_user.this.*.unique_id, [""])[0]
   description = "Unique id of the newly-created IAM user. Returns empty string if create_iam_user is set to false."
 }
 
